@@ -1,11 +1,12 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import '../../core/load_mock.dart';
+
 import 'login_page.dart';
+import 'login_store.dart';
 
 class LoginModule extends Module {
   @override
   void binds(Injector i) {
-    i.add(LoadMock.new);
+    i.add(LoginStore.new);
   }
 
   @override

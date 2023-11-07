@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/extensions/build_context_extensions.dart';
 import '../../core/themes/app_theme.dart';
 import '../../core/themes/spacing/spacing.dart';
+import '../../core/themes/typography/typography_constants.dart';
+import '../style_sheet/buttons/custom_button.dart';
 import '../style_sheet/custom_alert.dart';
 import '../style_sheet/custom_dialog.dart';
 import '../style_sheet/custom_loading.dart';
@@ -63,9 +66,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> onLogout() async {
+    await store.logout().then((value) async {
+      if (store.error != null) {
+        await CustomDialog.show(
+          context,
+          CustomAlert(
+            title: 'Erro ao finalizar sessão',
+            content: 'Ocorreu um erro ao finalizar sua sessão:\n${store.error}',
+            btnConfirmLabel: 'Fechar',
+            onConfirm: Navigator.of(context).pop,
+          ),
+          showClose: true,
+        );
+        store.error = null;
+        return;
+      }
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/login/',
+        ModalRoute.withName('/login/'),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          CustomButton.icon(
+            icon: Icons.exit_to_app_outlined,
+            onPressed: onLogout,
+          ),
+        ],
+      ),
       body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -91,8 +125,11 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         'Minhas notas',
-                        style: context.textTheme.titleLarge,
+                        style: context.textTheme.titleLarge?.copyWith(
+                          color: context.colorScheme.background,
+                        ),
                       ),
+                      const Divider(),
                       Spacing.xxs.vertical,
                       Flexible(
                         child: Card(
@@ -116,6 +153,7 @@ class _HomePageState extends State<HomePage> {
                   key: formKey,
                   child: CustomInputField(
                     controller: textController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     onEditingComplete: onAddNote,
                     hintText: 'Adicione sua nota aqui',
                     validators: [
@@ -154,10 +192,17 @@ class _HomePageState extends State<HomePage> {
                   child: Semantics(
                     button: true,
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () async {
+                        await launchUrl(
+                          Uri.parse('https://www.google.com.br/'),
+                        );
+                      },
                       child: Text(
                         'Políticas de privacidade',
-                        style: context.textTheme.labelMedium,
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: context.colorScheme.background,
+                          fontWeight: AppFontWeight.bold.value,
+                        ),
                       ),
                     ),
                   ),

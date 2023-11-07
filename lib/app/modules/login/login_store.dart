@@ -15,12 +15,20 @@ abstract class LoginStoreBase with Store {
   Exception? error;
 
   @action
-  Future<void> onLogin() async {
+  Future<void> onLogin({
+    required String email,
+    required String password,
+  }) async {
     isLoading = true;
     await LoadMock.fromAsset('login.json').then((value) {
       value.fold((left) {
         error = left;
       }, (right) async {
+        final user = UserModel.fromMap(right);
+        if (user.email != email) {
+          error = Exception('E-mail ou senha inválidos');
+          return;
+        }
         await SharedPreferences.getInstance().then((value) async {
           try {
             final saved = await value.setString(

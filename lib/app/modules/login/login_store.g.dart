@@ -44,8 +44,9 @@ mixin _$LoginStore on LoginStoreBase, Store {
       AsyncAction('LoginStoreBase.onLogin', context: context);
 
   @override
-  Future<void> onLogin() {
-    return _$onLoginAsyncAction.run(() => super.onLogin());
+  Future<void> onLogin({required String email, required String password}) {
+    return _$onLoginAsyncAction
+        .run(() => super.onLogin(email: email, password: password));
   }
 
   @override
