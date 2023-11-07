@@ -1,0 +1,36 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  strong-mode:
+  errors:
+    missing_required_param: error
+    missing_return: error
+    parameter_assignments: error
+    one_member_abstracts: ignore
+    todo: ignore
+    dead_code: error
+  exclude:
+    - "lib/gen/**/*.dart"
+    - build/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.mocks.dart"
+
+linter:
+  rules:
+    overridden_fields: false
+    sort_pub_dependencies: false
+    sort_constructors_first: false
+    prefer_single_quotes: true
+    avoid_function_literals_in_foreach_calls: false
+    avoid_positional_boolean_parameters: false
+    unnecessary_raw_strings: false
+    public_member_api_docs: false
+    always_specify_types: false
+    lines_longer_than_80_chars: true
+    avoid_classes_with_only_static_members: false
+    prefer_relative_imports: true
+    directives_ordering: true
+    library_private_types_in_public_api: false
+    require_trailing_commas: true
+    depend_on_referenced_packages: false
